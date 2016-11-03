@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import AsyncValidator from 'async-validator';
 
-class EleReactFormItem extends Component {
-  static displayName = 'EleReactFormItem';
+class XFormItem extends Component {
+
+  static uiName = 'XFormItem';
+
   static propTypes = {
     children: PropTypes.node,
     name: PropTypes.string,
@@ -25,6 +27,7 @@ class EleReactFormItem extends Component {
   };
 
   setFieldValue = (v) => {
+    this.setState({ error: '' });
     this.fieldValue = v;
   };
 
@@ -72,10 +75,14 @@ class EleReactFormItem extends Component {
       if (!React.isValidElement(child)) {
         return child;
       }
-      return React.cloneElement(child, {
-        $$sendValueToParent: this.setFieldValue,
-        $$validHandle: this.validHandle
-      });
+      const formComponentNames = ['XInput'];
+      if (formComponentNames.indexOf(child.type.uiName) !== -1) {
+        return React.cloneElement(child, {
+          $$sendValueToParent: this.setFieldValue,
+          $$validHandle: this.validHandle
+        });
+      }
+      return React.cloneElement(child);
     });
   };
 
@@ -85,10 +92,10 @@ class EleReactFormItem extends Component {
     return (
       <div>
         {children}
-        <span style={{color:'#c40000'}}>{error}</span>
+        <span style={{ color: '#c40000' }}>{error}</span>
       </div>
     );
   }
 }
 
-export default EleReactFormItem;
+export default XFormItem;

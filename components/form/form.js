@@ -1,10 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 
-class EleReactForm extends Component {
-  static displayName = 'EleReactForm';
+class XForm extends Component {
+
+  static uiName = 'XForm';
+
   static propTypes = {
     children: PropTypes.node,
-    rules: PropTypes.object, 
+    rules: PropTypes.object,
     onSubmit: PropTypes.func
   };
 
@@ -24,27 +26,27 @@ class EleReactForm extends Component {
       field.validHandle((errors) => {
         if (errors && errors) valid = false;
         if (index === fieldsLength - 1) {
-          cb(valid)
+          cb(valid);
         }
-      })
-    })
+      });
+    });
   };
 
   submitHandle = (event) => {
     event.preventDefault();
     const { onSubmit } = this.props;
     this.validHandle((valid) => {
-      onSubmit(valid, event)
-    })
+      if (onSubmit) onSubmit(valid, event);
+    });
   };
 
   renderChildren = () => {
     const { children } = this.props;
     return React.Children.map(children, (child) => {
       if (!React.isValidElement(child)) {
-        return React.cloneElement(child);
+        return child;
       }
-      if (child.type.displayName === 'EleReactFormItem') {
+      if (child.type.uiName === 'XFormItem') {
         return React.cloneElement(child, {
           $$joinForm: this.addFields,
           $$getFormRules: this.getRules
@@ -64,4 +66,4 @@ class EleReactForm extends Component {
   }
 }
 
-export default EleReactForm;
+export default XForm;
