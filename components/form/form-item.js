@@ -7,10 +7,15 @@ class XFormItem extends Component {
 
   static propTypes = {
     children: PropTypes.node,
-    name: PropTypes.string,
+    name: PropTypes.string.isRequired,
     rules: PropTypes.array,
+    trigger: PropTypes.oneOf(['blur', 'change']),
     $$joinForm: PropTypes.func,
     $$getFormRules: PropTypes.func
+  };
+
+  static defaultProps = {
+    trigger: 'blur'
   };
 
   constructor(props) {
@@ -31,37 +36,35 @@ class XFormItem extends Component {
     this.fieldValue = v;
   };
 
-  getRules = (trigger) => {
+  getRules = () => {
     const { rules, name, $$getFormRules } = this.props;
     let formRules;
-    if (!rules || (rules && !rules.length)) {
-      if ($$getFormRules) {
-        if (!name) throw new Error('you around with form , but can not find name for this');
-        formRules = $$getFormRules(name);
-      }
+    if ($$getFormRules) {
+      formRules = $$getFormRules(name);
     }
-    return [].concat(rules || formRules || []).filter(
-      rule => !rule.trigger || rule.trigger.indexOf(trigger) !== -1
-    );
+    return [].concat(rules || formRules || []);
   };
 
-  validHandle = (trigger = '', cb) => {
-    if (typeof trigger === 'function') {
-      cb = trigger;
-      trigger = '';
+  validHandle = (triggerType = 'blur', cb) => {
+    if (typeof triggerType === 'function') {
+      cb = triggerType;
+      triggerType = 'blur';
     }
     const $this = this;
-    const rules = this.getRules(trigger);
-    if (!rules || rules.length === 0) {
-      return;
-    }
-    const { name } = this.props;
-    this.setState({ isValidating: true });
+
+    const { trigger, name } = $this.props;
     const descriptor = {};
     const data = {};
+    if (trigger !== triggerType) return;
+
+    const rules = $this.getRules();
+    if (!rules || rules.length === 0) return;
+
+    $this.setState({ isValidating: true });
+
     descriptor[name] = rules;
     const validator = new AsyncValidator(descriptor);
-    data[name] = this.fieldValue;
+    data[name] = $this.fieldValue;
     validator.validate(data, { firstFields: true }, (errors) => {
       $this.setState({ error: errors ? errors[0].message : '' });
       if (cb && typeof cb === 'function') cb(errors);
