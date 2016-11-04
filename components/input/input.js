@@ -1,7 +1,7 @@
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import React, { PropTypes, Component } from 'react';
 import { types, formatMessage } from '../utils';
-
+/* eslint-disable no-console */
 class Input extends Component {
   static mgUiName = 'Input';
   static isValidatable = true;
@@ -70,6 +70,7 @@ class Input extends Component {
     type: 'text',
     step: 1,
     trigger: 'blur',
+    defaultValue: '',
     messages: {
       number: '请输入数字',
       required: '请输入该项',
@@ -169,6 +170,7 @@ class Input extends Component {
     let message = '';
     const error = errors[0];
     if (error) {
+      /* eslint-disable no-duplicate-case */
       switch (error) {
         case 'min':
         case 'max':
@@ -187,9 +189,8 @@ class Input extends Component {
     return !errors.length;
   };
   render() {
-    console.log('render');
     const {
-      defaultValue,
+      defaultValue, // eslint-disable-line
       placeholder,
       type, // eslint-disable-line
       ...otherProps
