@@ -10,7 +10,7 @@ class App extends React.Component {
   render() {
     return (
       <Form onSubmit={this.onSubmit}>
-        <Input type="url" required placeholder="请输入地址" />
+        <Input type="url" trigger="change" required placeholder="请输入地址" />
         <Input type="email" required placeholder="请输入邮箱" />
         <button>提交</button>
       </Form>

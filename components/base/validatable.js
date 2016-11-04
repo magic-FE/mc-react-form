@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from 'react';
+import { Component, PropTypes } from 'react';
 import { types } from '../utils';
+
 class Validatable extends Component {
   static parentName = 'Validatable';
   static propTypes = {
@@ -54,8 +55,8 @@ class Validatable extends Component {
   state = {
     error: ''
   }
-  validate = (trigger = 'blur') => {
-    if (this.props.trigger !== trigger) {
+  validate = (trigger) => {
+    if (trigger && this.props.trigger !== trigger) {
       return false;
     }
     const fieldValue = this.fieldValue;
