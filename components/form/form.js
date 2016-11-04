@@ -3,15 +3,10 @@ import React, { Component, PropTypes } from 'react';
 class Form extends Component {
   static mgUiName = 'Form';
 
-  mgUiName = 'Form'; // eslint-disable-line
-
   static propTypes = {
     children: PropTypes.node,
-    rules: PropTypes.object,
     onSubmit: PropTypes.func
   };
-
-  getRules = name => this.props.rules[name];
 
   fields = [];
 
@@ -31,7 +26,7 @@ class Form extends Component {
   renderChildren = () => {
     const { children } = this.props;
     return React.Children.map(children, (child) => {
-      if (child.type.parentName === 'Validatable') {
+      if (child.type.isValidatable) {
         return React.cloneElement(child, {
           $$joinForm: this.addFields
         });

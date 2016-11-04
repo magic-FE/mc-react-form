@@ -1,4 +1,3 @@
-
 export function isEmptyValue(value) {
   return !value;
 }
@@ -11,7 +10,7 @@ export const types = {
     if (isNaN(value)) {
       return false;
     }
-    return typeof value === 'number';
+    return typeof + value === 'number';
   },
   integer(value) {
     return types.number(value) && parseInt(value, 10) === value;
@@ -26,3 +25,13 @@ export const types = {
     return typeof value === 'string' && !!value.match(pattern.url);
   }
 };
+
+export function formatMessage(...args) {
+  let originalMessage = args[0];
+  args = args.slice(1);
+  const matchs = originalMessage.match(/{\d}/g);
+  matchs.forEach((m, index) => {
+    originalMessage = originalMessage.replace(m, args[index]);
+  });
+  return originalMessage;
+}

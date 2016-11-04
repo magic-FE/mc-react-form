@@ -3,15 +3,15 @@ import Form from '../components/form';
 import Input from '../components/input';
 
 class App extends React.Component {
-  onSubmit = (value, event) => {
-    console.log(value);
-    console.log(event);
-  };
+  onSubmit = (value, event) => {};
   render() {
     return (
       <Form onSubmit={this.onSubmit}>
-        <Input type="url" trigger="change" required placeholder="请输入地址" />
-        <Input type="email" required placeholder="请输入邮箱" />
+        <Input required placeholder="required失去焦点校验" />
+        <Input maxLength={10} minLength={5}  trigger="change"  placeholder="maxLength,minLength校验" />
+        <Input type="email"  placeholder="email校验" trigger="change" />
+        <Input type="number" max={15} min={9} step={3}  placeholder="number,min,max,step=3校验" trigger="change" />
+        <Input pattern={/^\d$/} trigger="change" placeholder="pattern校验" />
         <button>提交</button>
       </Form>
     );
