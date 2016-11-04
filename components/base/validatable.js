@@ -1,14 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { types } from '../utils';
-const messages = {
-  required: '请输入该项',
-  min: '不能小于{0}',
-  max: '不能大于{0}',
-  pattern: '格式不匹配',
-  email: '必须为email格式',
-  url: '必须为url格式'
-};
-class _Validatable extends Component {
+class Validatable extends Component {
   static parentName = 'Validatable';
   static propTypes = {
     /**
@@ -16,7 +8,7 @@ class _Validatable extends Component {
      * @type {[type]}
      *  text, number, url, email, password => float,int
      */
-    type: PropTypes.oneOf(['text', 'number', 'url', 'password', 'url']),
+    type: PropTypes.oneOf(['text', 'number', 'url', 'password']),
 
     /**
      * [pattern description]
@@ -41,11 +33,8 @@ class _Validatable extends Component {
      * @type {[type]} for number is effect
      */
     step: PropTypes.number,
-
     required: PropTypes.bool,
-
     trigger: PropTypes.oneOf(['blur', 'change']),
-
     messages: PropTypes.object
   };
 
@@ -53,7 +42,14 @@ class _Validatable extends Component {
     type: 'text',
     step: 1,
     trigger: 'blur',
-    messages: messages
+    messages: {
+      required: '请输入该项',
+      min: '不能小于{0}',
+      max: '不能大于{0}',
+      pattern: '格式不匹配',
+      email: '必须为email格式',
+      url: '必须为url格式'
+    }
   };
   state = {
     error: ''
@@ -74,7 +70,7 @@ class _Validatable extends Component {
     } = this.props;
     const errors = [];
     if (!!required && !fieldValue) errors.push('required');
-    if (this.mgUiName === '_ValidateInput') {
+    if (this.mgUiName === 'Input') {
       switch (type) {
         case 'number':
           if (!fieldValue) break;
@@ -97,4 +93,4 @@ class _Validatable extends Component {
     return !errors.length;
   };
 }
-export default _Validatable;
+export default Validatable;

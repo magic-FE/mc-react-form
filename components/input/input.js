@@ -1,7 +1,12 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
+import Validatable from '../base';
 
-class _Input extends Component {
-  mgUiName = '_Input'; // eslint-disable-line
+class Input extends Validatable {
+  static mgUiName = 'Input';
+
+  mgUiName = 'Input';
+
+  fieldValue = '';
 
   static propTypes = {
     onChange: PropTypes.func,
@@ -9,7 +14,6 @@ class _Input extends Component {
     onEnter: PropTypes.func,
     defaultValue: PropTypes.string,
     value: PropTypes.string,
-    type: PropTypes.oneOf(['text', 'number', 'email', 'password']),
     placeholder: PropTypes.string,
     /**
      * [addonNodeBefore description]
@@ -26,37 +30,36 @@ class _Input extends Component {
      */
     addonTextBefore: PropTypes.string,
     addonTextAfter: PropTypes.string,
-    $$sendValueToParent: PropTypes.func,
-    $$validHandle: PropTypes.func
+
+    $$joinForm: PropTypes.func
   };
 
   constructor(props) {
     super(props);
-    const { $$sendValueToParent, defaultValue } = props;
-    if ($$sendValueToParent && !!defaultValue) {
-      $$sendValueToParent(defaultValue);
-    }
+    const { $$joinForm, defaultValue } = props;
+    if (defaultValue) this.fieldValue = defaultValue;
+    if ($$joinForm) $$joinForm(this);
   }
 
   getLegalProps = () => {
-    const unKnowProps = ['$$sendValueToParent', '$$validHandle', 'onEnter'];
+    const unKnowProps = ['onEnter', 'trigger', 'messages', '$$joinForm'];
     const legalProps = Object.assign({}, this.props);
     unKnowProps.forEach(prop => delete legalProps[prop]);
     return legalProps;
   };
 
   changeHandle = (event) => {
-    const { onChange, $$sendValueToParent, $$validHandle } = this.props;
+    const { onChange } = this.props;
     const valueFromEvent = event.target.value;
-    if ($$sendValueToParent) $$sendValueToParent(valueFromEvent);
-    if ($$validHandle) $$validHandle('change');
+    this.fieldValue = valueFromEvent;
+    this.validate('change');
     if (onChange) onChange(valueFromEvent, event);
   };
 
   blurHandle = (event) => {
-    const { onBlur, $$validHandle } = this.props;
+    const { onBlur } = this.props;
     const valueFromEvent = event.target.value;
-    if ($$validHandle) $$validHandle('blur');
+    this.validate();
     if (onBlur) onBlur(valueFromEvent, event);
   };
 
@@ -73,6 +76,7 @@ class _Input extends Component {
       value,
       ...otherProps
     } = this.getLegalProps();
+    const { error } = this.state;
     return (
       <div className="input__container">
         <input
@@ -85,9 +89,10 @@ class _Input extends Component {
           onKeyDown={this.keydownHandle}
           {...otherProps}
         />
+        <div style={{ color: '#c40000' }}>{error}</div>
       </div>
     );
   }
 }
 
-export default _Input;
+export default Input;

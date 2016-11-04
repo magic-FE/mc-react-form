@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 
-class _Form extends Component {
-  mgUiName = '_Form'; // eslint-disable-line
+class Form extends Component {
+  static mgUiName = 'Form';
+
+  mgUiName = 'Form'; // eslint-disable-line
 
   static propTypes = {
     children: PropTypes.node,
@@ -29,15 +31,12 @@ class _Form extends Component {
   renderChildren = () => {
     const { children } = this.props;
     return React.Children.map(children, (child) => {
-      if (!React.isValidElement(child)) {
-        return child;
-      }
       if (child.type.parentName === 'Validatable') {
         return React.cloneElement(child, {
           $$joinForm: this.addFields
         });
       }
-      return React.cloneElement(child);
+      return child;
     });
   };
 
@@ -51,4 +50,4 @@ class _Form extends Component {
   }
 }
 
-export default _Form;
+export default Form;

@@ -1,9 +1,11 @@
 import React from 'react';
 import Form from '../components/form';
-import { ValidateInput as Input } from '../components/input';
+import Input from '../components/input';
 
 class App extends React.Component {
   onSubmit = (value, event) => {
+    console.log(value);
+    console.log(event);
   };
   render() {
     return (
