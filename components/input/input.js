@@ -85,14 +85,17 @@ class Input extends Component {
 
   constructor(props) {
     super(props);
-    const { $$joinForm, defaultValue } = props;
+    const { $$joinForm } = props;
     this.state = {
       error: '',
       value: ''
     };
-    if (defaultValue) this.setState({ value: defaultValue });
     if ($$joinForm) $$joinForm(this);
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+  }
+  componentWillMount() {
+    const { defaultValue } = this.props;
+    this.setState({ value: defaultValue });
   }
   getLegalProps = () => {
     const unKnowProps = ['onEnter', 'trigger', 'messages', '$$joinForm'];
@@ -197,7 +200,6 @@ class Input extends Component {
         <input
           type="text"
           value={value}
-          defaultValue={defaultValue}
           placeholder={placeholder}
           onBlur={this.blurHandle}
           onChange={this.changeHandle}
