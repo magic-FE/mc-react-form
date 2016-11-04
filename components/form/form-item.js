@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import AsyncValidator from 'async-validator';
 
-class XFormItem extends Component {
-
-  static uiName = 'XFormItem';
+class _FormItem extends Component {
+  mgUiName = '_FormItem'; // eslint-disable-line
 
   static propTypes = {
     children: PropTypes.node,
@@ -25,7 +24,6 @@ class XFormItem extends Component {
       $$joinForm(this);
     }
   }
-
   state = {
     isValidating: false,
     error: ''
@@ -78,8 +76,8 @@ class XFormItem extends Component {
       if (!React.isValidElement(child)) {
         return child;
       }
-      const formComponentNames = ['XInput'];
-      if (formComponentNames.indexOf(child.type.uiName) !== -1) {
+      const formComponentNames = ['_Input'];
+      if (formComponentNames.indexOf(child.type.mgUiName) !== -1) {
         return React.cloneElement(child, {
           $$sendValueToParent: this.setFieldValue,
           $$validHandle: this.validHandle
@@ -101,4 +99,4 @@ class XFormItem extends Component {
   }
 }
 
-export default XFormItem;
+export default _FormItem;

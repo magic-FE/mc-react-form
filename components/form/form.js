@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
-class XForm extends Component {
-
-  static uiName = 'XForm';
+class _Form extends Component {
+  mgUiName = '_Form'; // eslint-disable-line
 
   static propTypes = {
     children: PropTypes.node,
@@ -17,27 +16,14 @@ class XForm extends Component {
   addFields = (field) => {
     this.fields.push(field);
   };
-
-  validHandle = (cb) => {
-    let valid = true;
-    const $this = this;
-    const fieldsLength = $this.fields;
-    $this.fields.forEach((field, index) => {
-      field.validHandle((errors) => {
-        if (errors && errors) valid = false;
-        if (index === fieldsLength - 1) {
-          cb(valid);
-        }
-      });
-    });
-  };
-
   submitHandle = (event) => {
     event.preventDefault();
     const { onSubmit } = this.props;
-    this.validHandle((valid) => {
-      if (onSubmit) onSubmit(valid, event);
+    let isValid = true;
+    this.fields.forEach((field) => {
+      if (!field.validate()) isValid = false;
     });
+    if (onSubmit) onSubmit(isValid, event);
   };
 
   renderChildren = () => {
@@ -46,10 +32,9 @@ class XForm extends Component {
       if (!React.isValidElement(child)) {
         return child;
       }
-      if (child.type.uiName === 'XFormItem') {
+      if (child.type.parentName === 'Validatable') {
         return React.cloneElement(child, {
-          $$joinForm: this.addFields,
-          $$getFormRules: this.getRules
+          $$joinForm: this.addFields
         });
       }
       return React.cloneElement(child);
@@ -66,4 +51,4 @@ class XForm extends Component {
   }
 }
 
-export default XForm;
+export default _Form;
