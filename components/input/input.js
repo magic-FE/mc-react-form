@@ -195,12 +195,12 @@ class Input extends Component {
     return (
       <div className="input__container">
         <input
+          {...this.getOtherProps()}
           type="text"
           value={value}
           onBlur={this.blurHandle}
           onChange={this.changeHandle}
           onKeyDown={this.keydownHandle}
-          {...this.getOtherProps()}
         />
         <div style={{ color: '#c40000' }}>{error}</div>
       </div>
