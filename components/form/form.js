@@ -17,10 +17,16 @@ class Form extends Component {
     event.preventDefault();
     const { onSubmit } = this.props;
     let isValid = true;
+    const values = {};
     this.fields.forEach((field) => {
       if (!field.validate()) isValid = false;
+      const { name } = field.props;
+      const { value } = field.state;
+      if (name) values[name] = value;
+      // if (required && value) values[name] = value;
+      // if (!required) values[name] = value;
     });
-    if (onSubmit) onSubmit(isValid, event);
+    if (onSubmit) onSubmit(values, isValid, event);
   };
 
   renderChildren = () => {

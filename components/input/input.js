@@ -1,70 +1,70 @@
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import React, { PropTypes, Component } from 'react';
 import { types, formatMessage } from '../utils';
+
+const propTypes = {
+  /**
+   * [type description]
+   * @type {[type]}
+   *  text, number, url, email, password => float,int
+   */
+  type: PropTypes.oneOf(['text', 'number', 'url', 'password', 'email']),
+
+  /**
+   * [pattern description]
+   * @type {[type]} for text, password is effect
+   */
+  pattern: PropTypes.instanceOf(RegExp),
+
+  /**
+   * [min description]
+   * @type {[type]} for number is effect
+   */
+  min: PropTypes.number,
+
+  /**
+   * [max description]
+   * @type {[type]} for number is effect
+   */
+  max: PropTypes.number,
+
+  /**
+   * [step description]
+   * @type {[type]} for number is effect
+   */
+  step: PropTypes.number,
+  maxLength: PropTypes.number,
+  minLength: PropTypes.number,
+  required: PropTypes.bool,
+  trigger: PropTypes.oneOf(['blur', 'change']),
+  messages: PropTypes.object,
+
+  onChange: PropTypes.func,
+  onBlur: PropTypes.func,
+  onEnter: PropTypes.func,
+  defaultValue: PropTypes.string,
+  /**
+   * [addonNodeBefore description]
+   * @type {[node]}
+   * 前置元素,在input之外
+   */
+  addonNodeBefore: PropTypes.node,
+  addonNodeAfter: PropTypes.node,
+  /**
+   * [addonTextBefore description]
+   * @type {[string]}
+   * 在input之内
+   *
+   */
+  addonTextBefore: PropTypes.string,
+  addonTextAfter: PropTypes.string,
+  $$joinForm: PropTypes.func
+};
 /* eslint-disable no-console */
 class Input extends Component {
   static mgUiName = 'Input';
   static isValidatable = true;
-  static propTypes = {
-    /**
-     * [type description]
-     * @type {[type]}
-     *  text, number, url, email, password => float,int
-     */
-    type: PropTypes.oneOf(['text', 'number', 'url', 'password', 'email', 'float', 'integer']),
-
-    /**
-     * [pattern description]
-     * @type {[type]} for text, password is effect
-     */
-    pattern: PropTypes.instanceOf(RegExp),
-
-    /**
-     * [min description]
-     * @type {[type]} for number is effect
-     */
-    min: PropTypes.number,
-
-    /**
-     * [max description]
-     * @type {[type]} for number is effect
-     */
-    max: PropTypes.number,
-
-    /**
-     * [step description]
-     * @type {[type]} for number is effect
-     */
-    step: PropTypes.number,
-    maxLength: PropTypes.number,
-    minLength: PropTypes.number,
-    required: PropTypes.bool,
-    trigger: PropTypes.oneOf(['blur', 'change']),
-    messages: PropTypes.object,
-
-    onChange: PropTypes.func,
-    onBlur: PropTypes.func,
-    onEnter: PropTypes.func,
-    defaultValue: PropTypes.string,
-    value: PropTypes.string,
-    placeholder: PropTypes.string,
-    /**
-     * [addonNodeBefore description]
-     * @type {[node]}
-     * 前置元素,在input之外
-     */
-    addonNodeBefore: PropTypes.node,
-    addonNodeAfter: PropTypes.node,
-    /**
-     * [addonTextBefore description]
-     * @type {[string]}
-     * 在input之内
-     *
-     */
-    addonTextBefore: PropTypes.string,
-    addonTextAfter: PropTypes.string,
-    $$joinForm: PropTypes.func
-  };
+  static propTypes = propTypes;
 
   static defaultProps = {
     type: 'text',
@@ -98,8 +98,8 @@ class Input extends Component {
     const { defaultValue } = this.props;
     this.setState({ value: defaultValue });
   }
-  getLegalProps = () => {
-    const unKnowProps = ['onEnter', 'trigger', 'messages', '$$joinForm'];
+  getOtherProps = () => {
+    const unKnowProps = Object.keys(propTypes);
     const legalProps = Object.assign({}, this.props);
     unKnowProps.forEach(prop => delete legalProps[prop]);
     return legalProps;
@@ -112,10 +112,11 @@ class Input extends Component {
     if (type !== 'number') {
       valueFormat = valueFromEvent.substring(0, maxLength);
     }
+    if (type === 'number' && isNaN(valueFormat)) return;
     this.setState({ value: valueFormat }, () => {
       this.validate('change');
     });
-    if (onChange) onChange(valueFromEvent, event);
+    if (onChange) onChange(valueFormat, event);
   };
 
   blurHandle = (event) => {
@@ -189,23 +190,17 @@ class Input extends Component {
     return !errors.length;
   };
   render() {
-    const {
-      defaultValue, // eslint-disable-line
-      placeholder,
-      type, // eslint-disable-line
-      ...otherProps
-    } = this.getLegalProps();
+    console.log('render');
     const { error, value } = this.state;
     return (
       <div className="input__container">
         <input
           type="text"
           value={value}
-          placeholder={placeholder}
           onBlur={this.blurHandle}
           onChange={this.changeHandle}
           onKeyDown={this.keydownHandle}
-          {...otherProps}
+          {...this.getOtherProps()}
         />
         <div style={{ color: '#c40000' }}>{error}</div>
       </div>
