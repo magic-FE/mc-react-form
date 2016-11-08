@@ -1,3 +1,8 @@
+/**
+ * Form Component
+ * propTypes: children  [node]
+ *            onSubmit  [func]
+ */
 import React, { Component, PropTypes } from 'react';
 
 class Form extends Component {
@@ -5,7 +10,11 @@ class Form extends Component {
 
   static propTypes = {
     children: PropTypes.node,
-    onSubmit: PropTypes.func
+    onSubmit: PropTypes.func,
+  };
+
+  static defaultProps = {
+    onSubmit(){},
   };
 
   fields = [];
@@ -13,6 +22,7 @@ class Form extends Component {
   addFields = (field) => {
     this.fields.push(field);
   };
+
   submitHandle = (event) => {
     event.preventDefault();
     const { onSubmit } = this.props;
@@ -23,9 +33,8 @@ class Form extends Component {
       const { name } = field.props;
       const { value } = field.state;
       if (name) values[name] = value;
-      // if (required && value) values[name] = value;
-      // if (!required) values[name] = value;
     });
+
     if (onSubmit) onSubmit(values, isValid, event);
   };
 
@@ -42,12 +51,15 @@ class Form extends Component {
   };
 
   render() {
+
     const children = this.renderChildren();
+
     return (
       <form noValidate onSubmit={this.submitHandle}>
         {children}
       </form>
     );
+
   }
 }
 

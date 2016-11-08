@@ -1,6 +1,6 @@
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import React, { PropTypes, Component } from 'react';
-import { types, formatMessage } from '../utils';
+import { types, formatMessage } from '../../helpers/utils';
 
 const propTypes = {
   /**
