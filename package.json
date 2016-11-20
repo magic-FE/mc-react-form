@@ -1,37 +1,23 @@
 {
-  "name": "react-form",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "webpack-dev-server --hot --inline --port 3004 ",
-    "build": "webpack --display-error-details"
+  "name": "mc-react-form",
+  "version": "0.1.0",
+  "main": "dist",
+  "private": true,
+  "peerDependencies": {
+    "react": "^15.4.0",
+    "react-dom": "^15.4.0"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "babel-core": "^6.18.0",
-    "babel-eslint": "^7.1.0",
-    "babel-loader": "^6.2.6",
-    "babel-plugin-transform-runtime": "^6.15.0",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-react": "^6.16.0",
-    "babel-preset-stage-0": "^6.16.0",
-    "css-loader": "^0.25.0",
-    "eslint": "^3.9.0",
-    "eslint-config-airbnb": "^12.0.0",
-    "eslint-plugin-import": "^2.0.1",
-    "eslint-plugin-jsx-a11y": "^2.2.3",
-    "eslint-plugin-react": "^6.4.1",
-    "html-webpack-plugin": "^2.24.0",
-    "react-hot-loader": "^1.3.0",
-    "style-loader": "^0.13.1",
-    "webpack": "^1.13.3",
-    "webpack-dev-server": "^1.16.2"
+    "magic-scripts": "0.8.5"
   },
   "dependencies": {
-    "react": "^15.3.2",
-    "react-addons-pure-render-mixin": "^15.3.2",
-    "react-dom": "^15.3.2"
+    "react-addons-pure-render-mixin": "^15.4.0"
+  },
+  "scripts": {
+    "start": "magic-scripts start",
+    "dist": "magic-scripts dist",
+    "build": "magic-scripts build",
+    "test": "magic-scripts test --env=jsdom",
+    "eject": "magic-scripts eject"
   }
 }
