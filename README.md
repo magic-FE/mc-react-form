@@ -1,3 +1,5 @@
+#mc-react-form
+
 # User Guide
 ## Table of Contents
 
@@ -7,8 +9,8 @@
 - [Available Scripts](#available-scripts)
   - [npm start](#npm-start)
   - [npm test](#npm-test)
-  - [npm run build](#npm-run-build)
   - [npm run dist](#npm-run-dist)
+  - [npm run build](#npm-run-build)
   - [npm run eject](#npm-run-eject)
 - [Displaying Lint Output in the Editor](#displaying-lint-output-in-the-editor)
 - [Installing a Dependency](#installing-a-dependency)
@@ -82,13 +84,18 @@ my-component/
     index.html
     favicon.ico
   src/
-    App.css
-    App.js
-    App.test.js
-    index.css
+    components
+      App.js
+      App.less.css
+      App.test.js
+      index.js
+      logo.png
     index.js
-    logo.svg
+    README.md
 ```
+For the component to publish, **these files must exist with exact filenames**;
+
+* `src/components` is the componet will dist.
 
 For the project to build, **these files must exist with exact filenames**:
 
@@ -112,7 +119,7 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the component in the development mode.<br>
+Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br>
@@ -123,16 +130,16 @@ You will also see any lint errors in the console.
 Launches the test runner in the interactive watch mode.<br>
 See the section about [running tests](#running-tests) for more information.
 
+### `npm run dist`
+Transform your src/components code to dist folder use babel. and transform your css file use less and autoprefixer.
+Your component is ready to be deployed!
+
 ### `npm run build`
 
 Builds the component for production to the `build` folder.<br>
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.<br>
-
-### `npm run dist`
-Transform your src/component code to dist folder use babel. and transform your less code to css source.
-Your component is ready to be deployed!
 
 ### `npm run eject`
 
@@ -166,7 +173,7 @@ Then add this block to the `package.json` file of your project:
 {
   // ...
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "magic-component"
   }
 }
 ```
@@ -174,7 +181,7 @@ Then add this block to the `package.json` file of your project:
 Finally, you will need to install some packages *globally*:
 
 ```sh
-npm install -g eslint-config-react-app@0.3.0 eslint@3.8.1 babel-eslint@7.0.0 eslint-plugin-react@6.4.1 eslint-plugin-import@2.0.1 eslint-plugin-jsx-a11y@2.2.3 eslint-plugin-flowtype@2.21.0
+npm install -g eslint-config-magic-component@0.4.2 eslint@3.8.1 babel-eslint@7.0.0 eslint-plugin-react@6.4.1 eslint-plugin-import@2.0.1 eslint-plugin-jsx-a11y@2.2.3 eslint-plugin-flowtype@2.21.0
 ```
 
 We recognize that this is suboptimal, but it is currently required due to the way we hide the ESLint dependency. The ESLint team is already [working on a solution to this](https://github.com/eslint/eslint/issues/3458) so this may become unnecessary in a couple of months.
@@ -270,15 +277,16 @@ If you are concerned about using Webpack-specific semantics, you can put all you
 
 ## Post-Processing CSS
 
-This project setup minifies your CSS and adds vendor prefixes to it automatically through [Autoprefixer](https://github.com/postcss/autoprefixer) so you don’t need to worry about it.
+This project setup minifies your CSS and use [less.js](https://github.com/less/less.js) to transform css file then adds vendor prefixes to it automatically through [Autoprefixer](https://github.com/postcss/autoprefixer) so you don’t need to worry about it.
 
 For example, this:
 
 ```css
+@center: center;
 .App {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: @center;
 }
 ```
 
@@ -299,7 +307,7 @@ becomes this:
 }
 ```
 
-There is currently no support for preprocessors such as Less, or for sharing variables across CSS files.
+There is currently only support less preprocessors.
 
 ## Adding Images and Fonts
 
@@ -970,14 +978,14 @@ Install the Surge CLI if you haven't already by running `npm install -g surge`. 
            password: ********
        project path: /path/to/project/build
                size: 7 files, 1.8 MB
-             domain: create-react-app.surge.sh
+             domain: create-magic-component.surge.sh
              upload: [====================] 100%, eta: 0.0s
    propagate on CDN: [====================] 100%
                plan: Free
               users: email@domain.com
          IP Address: X.X.X.X
 
-    Success! Project is published and running at create-react-app.surge.sh
+    Success! Project is published and running at create-magic-component.surge.sh
 ```
 
 Note that in order to support routers that use HTML5 `pushState` API, you may want to rename the `index.html` in your build folder to `200.html` before deploying to Surge. This [ensures that every URL falls back to that file](https://surge.sh/help/adding-a-200-page-for-client-side-routing).
