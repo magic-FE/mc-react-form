@@ -60,7 +60,6 @@ const propTypes = {
   addonTextAfter: PropTypes.string,
   $$joinForm: PropTypes.func
 };
-/* eslint-disable no-console */
 class Input extends Component {
   static mgUiName = 'Input';
   static isValidatable = true;
