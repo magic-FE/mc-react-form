@@ -1,6 +1,6 @@
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import React, { PropTypes, Component } from 'react';
-import { types, formatMessage } from '../../helpers/utils';
+import { types, formatMessage } from '../helpers/utils';
 
 const propTypes = {
   /**
@@ -48,16 +48,16 @@ const propTypes = {
    * @type {[node]}
    * 前置元素,在input之外
    */
-  addonNodeBefore: PropTypes.node,
-  addonNodeAfter: PropTypes.node,
+  // addonNodeBefore: PropTypes.node,
+  // addonNodeAfter: PropTypes.node,
   /**
    * [addonTextBefore description]
    * @type {[string]}
    * 在input之内
    *
    */
-  addonTextBefore: PropTypes.string,
-  addonTextAfter: PropTypes.string,
+  // addonTextBefore: PropTypes.string,
+  // addonTextAfter: PropTypes.string,
   $$joinForm: PropTypes.func
 };
 class Input extends Component {

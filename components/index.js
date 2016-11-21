@@ -1,2 +1,2 @@
-export Form from 'Form';
-export Input from 'input';
+export Form from './Form';
+export Input from './Input';

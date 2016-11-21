@@ -7,7 +7,7 @@
     "start": "webpack-dev-server --hot --inline --history-api-fallback --port 3004 ",
     "build": "npm run babel",
     "lint:stage": "lint-staged",
-    "lintJs": "eslint --fix components demo"
+    "lintJs": "eslint --fix components"
   },
   "author": "",
   "license": "ISC",
