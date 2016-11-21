@@ -6,7 +6,7 @@ class App extends React.Component {
 
   onSubmit = (values, isValid, event) => {
     console.log(event);
-    document.querySelector('#showBox').innerHTML = '获取的表单的值：' + JSON.stringify(values) + ',<br /> 表单验证：' + (isValid ? '通过' : '未通过');
+    document.querySelector('#showBox').innerHTML = `获取的表单的值：${JSON.stringify(values)},<br /> 表单验证：${isValid ? '通过' : '未通过'}`;
   };
 
   render() {
@@ -22,6 +22,6 @@ class App extends React.Component {
       </Form>
     );
   }
-  
+
 }
 export default App;

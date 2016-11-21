@@ -10,11 +10,11 @@ class Form extends Component {
 
   static propTypes = {
     children: PropTypes.node,
-    onSubmit: PropTypes.func,
+    onSubmit: PropTypes.func
   };
 
   static defaultProps = {
-    onSubmit(){},
+    onSubmit() {}
   };
 
   fields = [];
@@ -51,7 +51,6 @@ class Form extends Component {
   };
 
   render() {
-
     const children = this.renderChildren();
 
     return (
@@ -59,7 +58,6 @@ class Form extends Component {
         {children}
       </form>
     );
-
   }
 }
 

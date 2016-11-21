@@ -10,7 +10,7 @@ export const types = {
     if (isNaN(value)) {
       return false;
     }
-    return typeof + value === 'number';
+    return typeof +value === 'number';
   },
   integer(value) {
     return types.number(value) && parseInt(value, 10) === value;
