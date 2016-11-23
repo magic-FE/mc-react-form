@@ -6,7 +6,7 @@ module.exports = {
   context: __dirname,
   entry: [
     'react-hot-loader/patch',
-    'webpack-dev-server/client?http://0.0.0.0:3004',
+    'webpack-hot-middleware/client',
     './demo/index'
   ],
   output: {
@@ -29,6 +29,9 @@ module.exports = {
     }]
   },
   plugins: [
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.NoErrorsPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: './demo/index.html',
       hash: true

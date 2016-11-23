@@ -1,3 +1,4 @@
 webpack.config.*
 .eslintrc.js
 node_modules/
+server.js

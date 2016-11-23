@@ -17,10 +17,31 @@ class Form extends Component {
     onSubmit() {}
   };
 
+  getFieldsValue = (name) => {
+    const fields = this.fields;
+    for (let i = 0, len = fields.length; i < len; i += 1) {
+      if (fields[i].props.name === name) {
+        return fields[i].state.value;
+      }
+    }
+    return false;
+  };
+
   fields = [];
 
   addFields = (field) => {
     this.fields.push(field);
+  };
+
+  validateEqualTo = (name) => {
+    let equalToVal = false;
+    const validFields = this.fields.filter((field) => {
+      if (field.props.name === name) equalToVal = field.state.value;
+      return name === field.props.equalTo;
+    });
+    validFields.forEach((validField) => {
+      validField.singleValidateEqualTo(equalToVal);
+    });
   };
 
   submitHandle = (event) => {
@@ -28,23 +49,38 @@ class Form extends Component {
     const { onSubmit } = this.props;
     let isValid = true;
     const values = {};
-    this.fields.forEach((field) => {
-      if (!field.validate()) isValid = false;
-      const { name } = field.props;
-      const { value } = field.state;
-      if (name) values[name] = value;
-    });
-
+    if (this.fields.length) {
+      this.fields.forEach((field) => {
+        const { $dirty, $valid } = field.someProps;
+        if (!$dirty) {
+          if (!field.validate()) isValid = false;
+        } else if (!$valid) {
+          isValid = false;
+        }
+        const { name } = field.props;
+        const { value } = field.state;
+        if (name) values[name] = value;
+      });
+    }
     if (onSubmit) onSubmit(values, isValid, event);
   };
 
   renderChildren = () => {
     const { children } = this.props;
+    const equalTos = [];
+    children.forEach((child) => {
+      if (child.props.equalTo) {
+        equalTos.push(child.props.equalTo);
+      }
+    });
     return React.Children.map(children, (child) => {
       if (child.type.isValidatable) {
-        return React.cloneElement(child, {
+        const props = {
           $$joinForm: this.addFields
-        });
+        };
+        if (child.props.equalTo) props.$$getFieldsValue = this.getFieldsValue;
+        if (equalTos.some(equalTo => equalTo === child.props.name)) props.$$validateEqualTo = this.validateEqualTo; // eslint-disable-line max-len
+        return React.cloneElement(child, props);
       }
       return child;
     });

@@ -3,6 +3,7 @@ import React, { PropTypes, Component } from 'react';
 import { types, formatMessage } from '../helpers/utils';
 
 const propTypes = {
+  name: PropTypes.string.isRequired,
   /**
    * [type description]
    * @type {[type]}
@@ -33,15 +34,19 @@ const propTypes = {
    * @type {[type]} for number is effect
    */
   step: PropTypes.number,
+
   maxLength: PropTypes.number,
   minLength: PropTypes.number,
+  focusReset: PropTypes.bool,
   required: PropTypes.bool,
   trigger: PropTypes.oneOf(['blur', 'change']),
+  equalTo: PropTypes.string,
   messages: PropTypes.object,
 
   onChange: PropTypes.func,
   onBlur: PropTypes.func,
   onEnter: PropTypes.func,
+  onFocus: PropTypes.func,
   defaultValue: PropTypes.string,
   /**
    * [addonNodeBefore description]
@@ -58,7 +63,21 @@ const propTypes = {
    */
   // addonTextBefore: PropTypes.string,
   // addonTextAfter: PropTypes.string,
-  $$joinForm: PropTypes.func
+  $$joinForm: PropTypes.func,
+  $$getFieldsValue: PropTypes.func,
+  $$validateEqualTo: PropTypes.func
+};
+const defaultMessage = {
+  number: '请输入数字',
+  required: '请输入该项',
+  min: '不能小于{0}',
+  max: '不能大于{0}',
+  pattern: '格式不匹配',
+  email: '必须为email格式',
+  url: '必须为url格式',
+  minLength: '至少为{0}个字符,当前输入了{1}个字符',
+  step: '必须为合法数字,{0}的倍数',
+  equalTo: '必须等于{0}'
 };
 class Input extends Component {
   static mgUiName = 'Input';
@@ -70,22 +89,17 @@ class Input extends Component {
     step: 1,
     trigger: 'blur',
     defaultValue: '',
-    messages: {
-      number: '请输入数字',
-      required: '请输入该项',
-      min: '不能小于{0}',
-      max: '不能大于{0}',
-      pattern: '格式不匹配',
-      email: '必须为email格式',
-      url: '必须为url格式',
-      minLength: '至少为{0}个字符,当前输入了{1}个字符',
-      step: '必须为合法数字,{0}的倍数'
-    }
+    messages: {}
   };
 
   constructor(props) {
     super(props);
-    const { $$joinForm } = props;
+    const { $$joinForm, messages } = props;
+    this.someProps = {
+      $valid: true,
+      $dirty: false
+    };
+    this.lastMessage = Object.assign({}, defaultMessage, messages);
     this.state = {
       error: '',
       value: ''
@@ -97,6 +111,12 @@ class Input extends Component {
     const { defaultValue } = this.props;
     this.setState({ value: defaultValue });
   }
+  componentWillReceiveProps(nextProps) {
+    if ('value' in nextProps) {
+      const value = nextProps.value;
+      this.setState({ value });
+    }
+  }
   getOtherProps = () => {
     const unKnowProps = Object.keys(propTypes);
     const legalProps = Object.assign({}, this.props);
@@ -105,7 +125,8 @@ class Input extends Component {
   };
 
   changeHandle = (event) => {
-    const { onChange, maxLength, type } = this.props;
+    this.someProps.$dirty = true;
+    const { onChange, maxLength, type, name, $$validateEqualTo } = this.props;
     const valueFromEvent = event.target.value;
     let valueFormat = valueFromEvent;
     if (type !== 'number') {
@@ -114,10 +135,15 @@ class Input extends Component {
     if (type === 'number' && isNaN(valueFormat)) return;
     this.setState({ value: valueFormat }, () => {
       this.validate('change');
+      if ($$validateEqualTo) $$validateEqualTo(name);
     });
     if (onChange) onChange(valueFormat, event);
   };
-
+  focusHandle = (event) => {
+    const { focusReset, onFocus } = this.props;
+    if (focusReset) this.setState({ error: '' });
+    if (onFocus) onFocus(event);
+  };
   blurHandle = (event) => {
     const { onBlur } = this.props;
     const valueFromEvent = event.target.value;
@@ -130,9 +156,18 @@ class Input extends Component {
     const valueFromEvent = event.target.value;
     if (onEnter && event.keyCode === 13) onEnter(valueFromEvent, event);
   };
-
+  singleValidateEqualTo = (equalTo) => {
+    let error;
+    if (equalTo && this.state.value !== equalTo) {
+      error = formatMessage(this.lastMessage.equalTo, this.props.equalTo);
+    } else {
+      error = '';
+    }
+    this.setState({ error });
+    this.someProps.$valid = !error;
+  }
   validate = (trigger) => {
-    if (trigger && this.props.trigger !== trigger) {
+    if (!!trigger && this.props.trigger !== trigger) {
       return false;
     }
     const { value } = this.state;
@@ -144,11 +179,13 @@ class Input extends Component {
       minLength,
       step,
       required,
-      messages
+      equalTo,
+      $$getFieldsValue
     } = this.props;
     const errors = [];
+    const lastMessage = this.lastMessage;
     if (!!required && !value) errors.push('required');
-    if (value) {
+    if (value || !required) {
       if (!!minLength && value.length < minLength && type !== 'number') errors.push('minLength');
       switch (type) {
         case 'number':
@@ -166,6 +203,7 @@ class Input extends Component {
         default:
           if (!!pattern && !value.match(pattern)) errors.push('pattern');
       }
+      if (!!equalTo && value !== $$getFieldsValue(equalTo)) errors.push('equalTo');
     }
     let message = '';
     const error = errors[0];
@@ -176,16 +214,18 @@ class Input extends Component {
         case 'max':
         case 'max':
         case 'step':
-          message = formatMessage(messages[error], this.props[error]);
+        case 'equalTo':
+          message = formatMessage(lastMessage[error], this.props[error]);
           break;
         case 'minLength':
-          message = formatMessage(messages[error], minLength, value.length);
+          message = formatMessage(lastMessage[error], minLength, value.length);
           break;
         default:
-          message = messages[error];
+          message = lastMessage[error];
       }
     }
     this.setState({ error: message });
+    this.someProps.$valid = !errors.length;
     return !errors.length;
   };
   render() {
@@ -200,6 +240,7 @@ class Input extends Component {
           onBlur={this.blurHandle}
           onChange={this.changeHandle}
           onKeyDown={this.keydownHandle}
+          onFocus={this.focusHandle}
         />
         <div style={{ color: '#c40000' }}>{error}</div>
       </div>
