@@ -18,10 +18,10 @@ app.use(require('webpack-dev-middleware')(compiler, {
 app.use(require('webpack-hot-middleware')(compiler));
 
 app.get('*', function(req, res) {
-  res.sendFile(path.join(__dirname, './demo/index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-const port = 3030;
+const port = 3000;
 const ip = internalIp.v4();
 
 app.listen(port, (err) => {

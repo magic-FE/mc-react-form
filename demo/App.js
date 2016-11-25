@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Input } from '../components';
-
+import Counter from '../components/Counter';
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -30,6 +30,7 @@ class App extends React.Component {
     );
     return (
       <div>
+        <Counter />
         <Form onSubmit={this.onSubmit}>
           <Input
             name="a"
@@ -44,10 +45,9 @@ class App extends React.Component {
           <Input type="number" name="d" required max={15} min={9} step={3} placeholder="number,min=15,max=9,step=3校验" trigger="change" />
           <Input pattern={/^\d$/} name="e" required trigger="change" placeholder="pattern'/^\d$/'校验" />
           <Input name="f" equalTo="c" placeholder="equalTo校验" />
-          <button>提交</button>
+          <button>提交1111</button>
           <div id="showBox" />
         </Form>
-        
       </div>
     );
   }

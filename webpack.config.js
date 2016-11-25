@@ -3,7 +3,6 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  context: __dirname,
   entry: [
     'react-hot-loader/patch',
     'webpack-hot-middleware/client',
@@ -22,20 +21,21 @@ module.exports = {
     loaders: [{
       test: /(\.js|\.jsx)$/,
       loaders: ['babel'],
-      exclude: path.join(__dirname, 'node_modules')
+      exclude: path.join(__dirname, 'node_modules'),
+      include: path.join(__dirname)
     }, {
       test: /(\.css)$/,
       loaders: ['style', 'css?modules']
     }]
   },
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      template: './demo/index.html',
+      template: './index.html',
       hash: true
-    })
+    }),
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin()
   ],
   devtool: 'inline-source-map'
 };
